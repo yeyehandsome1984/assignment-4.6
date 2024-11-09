@@ -5,6 +5,7 @@ version: 2.1
 orbs:
   node: circleci/node@5.0.1
   docker: circleci/docker@2.1.4
+  heroku: circleci/heroku@2.0.0
 
 jobs:
   build:
@@ -44,6 +45,19 @@ jobs:
           image: yichen1984/yichen
       - docker/push:
           image: yichen1984/yichen
+  deploy:
+    docker:
+      - image: cimg/node:16.10
+    steps:
+      - setup_remote_docker      
+      - heroku/install
+      - checkout
+      - run:
+          name: Heroku Container Push
+          command: | 
+            heroku container:login
+            heroku container:push web -a yichen1984/yichen
+            heroku container:release web -a yichen1984/yichen
 
 workflows:
   version: 2
@@ -56,3 +70,12 @@ workflows:
       - publish:
           requires:
             - test
+      
+      - deploy:
+          requires:
+            - build-and-push
+          filters:
+            tags:
+              only: /^v.*/
+            branches: 
+              ignore: /.*/
