@@ -1,36 +1,32 @@
-# Continuous Deployment - Using Containerization
+# Application for Software Engineering DevOps (Module 4)
 
-## Dependencies
+## Brief
 
-Refer to the following markdown file for the respective sections of the class:
-- [Self Studies](./studies.md)
-- [Lesson](./lesson.md)
-- [Assignment](./assignment.md)
+Node application is lightweight and is easy to use as sample application for this DevOps module. Please read on to learn about the basic (Terminal) command to build, test and run a Node application.
 
-## Lesson Objectives
+## Commands
 
-By the end of this lesson, learners will be able to:
+### npm install
 
-- Configure CD workflow for tagged container release based on the Semantic Versioning convention learned in lesson 4.4
-- Implement the CD Pipeline that pull image from registry and deploy them to a container hosted environment.
-- Explain the difference between staging, production and disaster recovery environments.
-- Explain how IaC enhance the CD Pipeline.
+The `npm install` is the first command you will use to install all dependencies specified in the `package.json` file [here](./package.json).
 
+### npm run test
 
-## Lesson Plan
+The `npm run test` is the command to run the test script specified in the `package.json` file. This command in turns run the `jest` command.
 
-|Duration|What|How or Why|
-|--------|-----|-------|
-|- 5mins |Start zoom session|So that students can join early and start class on time|
-|40 mins|Part 1| Intro to CD|
-|20 mins|Part 2| Setup|
-||**1 HR MARK**|
-|5 mins|Break|Break|
-|40 mins|Part 3| Implement CD|
-|5 mins|Buffer|In case of overrun|
-|5 mins|Break||
-|5 mins|Assignment Briefing|Help students to understand the expectation and direction of the assignment to prevent mis-interpretations.|
-||**2 HR MARK**|
-|60 mins|Assignment|
-||**END CLASS 3 HR MARK**|
+Sample Snippet from package.json:
+```json
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest" // the test script
+  }
+```
+
+### npm run start
+
+The `npm run start` command will start the application. By default, it will use the `PORT` number specified in the `.env` file [here](./.env). Upon successful start, you will see the logging message:
+
+```sh
+Listening to port <port number>
+```
 
