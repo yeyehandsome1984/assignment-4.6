@@ -2,37 +2,50 @@
 # Stacks detected: deps:node:.,test:jest:
 version: 2.1
 orbs:
-  node: circleci/node@5
+  node: circleci/node@5.0.1
+  docker: circleci/docker@2.1.4
+
 jobs:
-  test-node:
-    # Install node dependencies and run tests
-    executor: node/default
-    environment:
-      JEST_JUNIT_OUTPUT_DIR: ./test-results/
-    steps:
-      - checkout
-      - node/install-packages:
-          pkg-manager: npm
-      - run:
-          command: npm install jest-junit
-      - run:
-          name: Run tests
-          command: npm run test --ci --runInBand --reporters=default --reporters=jest-junit
-      - store_test_results:
-          path: ./test-results/
-  deploy:
-    # This is an example deploy job, not actually used by the workflow
+  build:
     docker:
-      - image: cimg/base:stable
-    steps:
-      # Replace this with steps to deploy to users
-      - run:
-          name: deploy
-          command: '#e.g. ./deploy.sh'
+      
+image: cimg/node:16.10
+  steps:
+checkout
+node/install-packages:
+    pkg-manager: npm
+run: |
+  echo "Installing dependencies..."
+  npm install
+test:
+  docker:
+image: cimg/node:16.10
+steps:
+checkout
+node/install-packages:
+  pkg-manager: npm
+run: |
+  echo "Running tests..."
+  npm test
+publish:
+  executor: docker/docker
+  steps:
+setup_remote_docker
+checkout
+docker/check
+docker/build:
+  image: yichen1984/yichen
+docker/push:
+  image: yichen1984/yichen
+
 workflows:
-  build-and-test:
+  simple_workflow:
     jobs:
-      - test-node
-    # - deploy:
-    #     requires:
-    #       - test-node
+      
+build
+test:
+      requires:
+build
+publish:
+  requires:
+test
